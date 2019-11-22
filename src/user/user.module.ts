@@ -7,10 +7,10 @@ import { UserSchema } from './schemas/user.schema';
 import { AuthService } from './auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth/constants';
-import { TokensModule } from 'src/tokens/tokens.module';
-import { ConfigModule } from 'src/config/config.module';
-import { RefreshTokenSchema } from 'src/schemas/refresh-token.schema';
-import { AccessTokenSchema } from 'src/schemas/access-token.schema';
+import { TokensModule } from '../tokens/tokens.module';
+import { ConfigModule } from '../config/config.module';
+import { RefreshTokenSchema } from '../schemas/refresh-token.schema';
+import { AccessTokenSchema } from '../schemas/access-token.schema';
 
 @Module({
   providers: [UserService,
@@ -29,7 +29,7 @@ import { AccessTokenSchema } from 'src/schemas/access-token.schema';
     TokensModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '69999s' },
+      signOptions: { expiresIn: '9m' },
     }),
   ],
   exports: [UserService]

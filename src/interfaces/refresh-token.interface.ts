@@ -3,6 +3,5 @@ import { UserInterface } from './user.interface';
 export interface RefreshTokenInterface extends Document {
   readonly _id: Types.ObjectId;
   readonly created: Date;
-  readonly user: UserInterface['_id'];
-
+  readonly user: UserInterface['_id']
 }

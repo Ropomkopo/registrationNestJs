@@ -16,7 +16,7 @@ export class AccessTokenService {
   }
 
   public async create(refreshTokenId: AccessTokenInterface['refreshToken'],
-                      isVerified: boolean): Promise<AccessTokenInterface> {
+    isVerified: boolean): Promise<AccessTokenInterface> {
     const refreshToken: RefreshTokenInterface = await this.refreshTokenService.findOne({ _id: refreshTokenId });
 
     if (!refreshToken) {
