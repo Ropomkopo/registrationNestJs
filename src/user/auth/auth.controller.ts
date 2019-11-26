@@ -1,4 +1,5 @@
 import { Controller, Post, Body, Res, HttpStatus, Logger, HttpException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ApiUseTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
@@ -13,7 +14,8 @@ import { AccessTokenInterface } from '../../interfaces/access-token.interface';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService
 
   ) { }
   @Post('signUp')
@@ -29,19 +31,24 @@ export class AuthController {
         accessToken: dataOfToken.accessToken._id,
         refreshToken: dataOfToken.refreshToken._id,
       });
-    } catch (error) { 
+    } catch (error) {
       throw new HttpException('You have this user in your DB', HttpStatus.BAD_REQUEST)
     }
   }
   @Post('signIn')
   async logIn(@Res() res: any, @Body() data: CreateUserDto) {
-    try {
-      const payload = { email: data.email, pass: data.password };
-      return res.status(HttpStatus.OK).json({
-        access_token: this.jwtService.sign(payload),
-      });
-    } catch (error) {
-      throw new HttpException('Some value is wrong',HttpStatus.BAD_REQUEST)
+    const user = await this.userService.findOne({ email: data.email })
+    if (user) {
+      const pass = await bcrypt.compare(data.password, user.password);
+      if (pass === true) {
+        const payload = { email: data.email, pass: data.password };
+        const accessToken = this.jwtService.sign(payload)
+        return res.status(HttpStatus.OK).json({
+          access_token: accessToken,
+        });
+      }throw new HttpException('your pass is not valid', HttpStatus.BAD_REQUEST)
+    } else {
+      throw new HttpException('your email is not valid', HttpStatus.BAD_REQUEST)
     }
   }
 }

@@ -12,7 +12,6 @@ export class UserService {
         return await this.UserModel.findOne(query)
     }
     async findOne(value: object): Promise<UserInterface> {
-        console.log(value)
         const data =  await this.UserModel.findOne(value)
         return data;
     }
