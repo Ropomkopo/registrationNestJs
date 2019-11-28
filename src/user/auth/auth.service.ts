@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserInterface } from '../../interfaces/user.interface';
@@ -9,6 +9,8 @@ import { AccessTokenService } from '../../tokens/access-token/access-token.servi
 import { RefreshTokenService } from '../../tokens/refresh-token/refresh-token.service';
 import { UserService } from '../user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { EmailService } from '../../email/email.service';
+const shortid = require('shortid');
 
 @Injectable()
 export class AuthService {
@@ -17,6 +19,7 @@ export class AuthService {
         private readonly accessTokenService: AccessTokenService,
         private readonly refreshTokenService: RefreshTokenService,
         private readonly userService: UserService,
+        private readonly emailService: EmailService
     ) { }
     async createUser(data: CreateUserDto) {
         const user = await this.userService.findOne({ email: data.email })
@@ -41,5 +44,12 @@ export class AuthService {
             refreshToken,
             accessToken,
         };
+    }
+    async forgotPasseord(email: UserInterface['email']) {
+        const user = await this.userService.findOne({ email: email });
+        const newPass = shortid.generate()
+        user.password = await bcrypt.hash(newPass, 9)
+        user.save();
+        this.emailService.sendEmail(email, 'rolo.lisenko@gmail.com', 'newPassword to register in RomanShop', `now it is your new password  ${newPass}`)
     }
 }

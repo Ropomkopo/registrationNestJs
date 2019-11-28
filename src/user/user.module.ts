@@ -11,10 +11,11 @@ import { TokensModule } from '../tokens/tokens.module';
 import { ConfigModule } from '../config/config.module';
 import { RefreshTokenSchema } from '../schemas/refresh-token.schema';
 import { AccessTokenSchema } from '../schemas/access-token.schema';
+import { EmailService } from '../email/email.service';
 
 @Module({
   providers: [UserService,
-    AuthService],
+    AuthService,EmailService],
   controllers: [
     AuthController,
     UserController
@@ -32,6 +33,6 @@ import { AccessTokenSchema } from '../schemas/access-token.schema';
       signOptions: { expiresIn: '9m' },
     }),
   ],
-  exports: [UserService]
+  exports: [UserService],
 })
 export class UserModule { }

@@ -8,7 +8,7 @@ export class UserService {
     constructor(
         @InjectModel('User') private readonly UserModel: Model<UserInterface>,
     ) { }
-    async findOneByQuery(query: string): Promise<UserInterface> {
+    async findOneByQuery(query: object): Promise<UserInterface> {
         return await this.UserModel.findOne(query)
     }
     async findOne(value: object): Promise<UserInterface> {
