@@ -31,7 +31,7 @@
     "@types/mongoose": "^5.5.32",
     "bcrypt": "^3.0.6",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.11.0",
+    "class-validator": "^0.14.0",
     "dotenv": "^8.2.0",
     "mongoose": "^5.7.11",
     "passport": "^0.4.0",
